@@ -74,7 +74,7 @@ export default function Home() {
               priority
             />
           </div>
-            <h1 className="text-2xl font-bold text-gray-800 mb-2">ฟอร์มออกไปทำงาน</h1>
+            <h1 className="text-2xl font-bold text-gray-800 mb-2">คำสั่งรายงานค่าเสี่ยงภัย</h1>
             <p className="text-gray-500 text-sm">กรุณากรอกข้อมูลให้ครบถ้วน</p>
           </div>
 
