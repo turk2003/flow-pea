@@ -1,12 +1,12 @@
 'use client';
 import { useState } from 'react';
-
+import Image from 'next/image';
 export default function Home() {
   const [form, setForm] = useState({
-    name: '',
+    name_1: '',
+    name_2: '',
     des: '',
     day: '',
-    startTime: '',
     status: '',
   });
 
@@ -14,10 +14,10 @@ export default function Home() {
 
   const resetForm = () => {
     setForm({
-      name: '',
+      name_1: '',
+      name_2: '',
       des: '',
       day: '',
-      startTime: '',
       status: '',
     });
   };
@@ -34,10 +34,11 @@ export default function Home() {
         },
         body: JSON.stringify({
           work: {
-            "ผู้ทำงาน": form.name,
+            "ผู้ทำงาน": form.name_2
+              ? `${form.name_1}, ${form.name_2}`
+              : form.name_1,
             "รายละเอียดงาน": form.des,
             "วันที่ทำงาน": form.day,
-            "เวลาที่ทำ": form.startTime,
             "สถานะ": "รออนุมัติ",
           },
         }),
@@ -63,11 +64,16 @@ export default function Home() {
         <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="w-16 h-16  rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#6E22B7' }}>
-              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-              </svg>
-            </div>
+          <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#6E22B7' }}>
+            <Image
+              src="/Logo_of_the_Provincial_Electricity_Authority_of_Thailand.svg.png"
+              alt="Logo"
+              width={70}
+              height={70}
+              className="object-contain"
+              priority
+            />
+          </div>
             <h1 className="text-2xl font-bold text-gray-800 mb-2">ฟอร์มออกไปทำงาน</h1>
             <p className="text-gray-500 text-sm">กรุณากรอกข้อมูลให้ครบถ้วน</p>
           </div>
@@ -77,16 +83,47 @@ export default function Home() {
             {/* ชื่อ */}
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
-                ชื่อผู้ทำงาน <span className="text-red-500">*</span>
+                ชื่อผู้ทำงาน 1 <span className="text-red-500">*</span>
               </label>
-              <input
-                type="text"
-                value={form.name}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-gray-800 placeholder-gray-400"
-                placeholder="กรอกชื่อของคุณ"
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
+              <select
+                value={form.name_1}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-gray-800"
+                onChange={(e) => setForm({ ...form, name_1: e.target.value })}
                 required
-              />
+              >
+                <option value="">-- เลือกชื่อ --</option>
+                <option value="503688 : นายอดิเทพ วงศ์ทิม">503688 : นายอดิเทพ วงศ์ทิม</option>
+                <option value="504235 : นายสุทัศน์ สุขเกิด">504235 : นายสุทัศน์ สุขเกิด</option>
+                <option value="504234 : นายสิทธิชัย จารุนิรันดรง">504234 : นายสิทธิชัย จารุนิรันดรง</option>
+                <option value="503693 : นายนพพร ศรีมณีวงษ์">503693 : นายนพพร ศรีมณีวงษ์</option>
+                <option value="503686 : นายนฤพนธิ์ จรูญรัตน์">503686 : นายนฤพนธิ์ จรูญรัตน์</option>
+                <option value="512785 : นายสุธิรัก อาสน์สถิตย์">512785 : นายสุธิรัก อาสน์สถิตย์</option>
+                <option value="512780 : นายนิติพงษ์ ศรีเนตร">512780 : นายนิติพงษ์ ศรีเนตร</option>
+                <option value="512787 : นายพรหมเรศ แนวพะนา">512787 : นายพรหมเรศ แนวพะนา</option>
+                {/* เพิ่มชื่ออื่นๆ ตามต้องการ */}
+              </select>
+            </div>
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                ชื่อผู้ทำงาน 2 <span className="text-red-500">*</span>
+              </label>
+              <select
+                value={form.name_2}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-gray-800"
+                onChange={(e) => setForm({ ...form, name_2: e.target.value })}
+                required
+              >
+                <option value="">-- เลือกชื่อ --</option>
+                <option value="503688 : นายอดิเทพ วงศ์ทิม">503688 : นายอดิเทพ วงศ์ทิม</option>
+                <option value="504235 : นายสุทัศน์ สุขเกิด">504235 : นายสุทัศน์ สุขเกิด</option>
+                <option value="504234 : นายสิทธิชัย จารุนิรันดรง">504234 : นายสิทธิชัย จารุนิรันดรง</option>
+                <option value="503693 : นายนพพร ศรีมณีวงษ์">503693 : นายนพพร ศรีมณีวงษ์</option>
+                <option value="503686 : นายนฤพนธิ์ จรูญรัตน์">503686 : นายนฤพนธิ์ จรูญรัตน์</option>
+                <option value="512785 : นายสุธิรัก อาสน์สถิตย์">512785 : นายสุธิรัก อาสน์สถิตย์</option>
+                <option value="512780 : นายนิติพงษ์ ศรีเนตร">512780 : นายนิติพงษ์ ศรีเนตร</option>
+                <option value="512787 : นายพรหมเรศ แนวพะนา">512787 : นายพรหมเรศ แนวพะนา</option>
+                {/* เพิ่มชื่ออื่นๆ ตามต้องการ */}
+              </select>
             </div>
 
             {/* รายละเอียดงาน */}
@@ -118,19 +155,7 @@ export default function Home() {
               />
             </div>
 
-            {/* เวลาที่ทำ */}
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                เวลาที่ทำงาน <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="time"
-                value={form.startTime}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-gray-800"
-                onChange={(e) => setForm({ ...form, startTime: e.target.value })}
-                required
-              />
-            </div>
+          
 
             {/* Submit Button */}
             <button

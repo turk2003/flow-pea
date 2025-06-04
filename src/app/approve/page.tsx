@@ -6,7 +6,6 @@ type Row = {
   "ผู้ทำงาน": string;
   "รายละเอียดงาน": string;
   "วันที่ทำงาน": string;
-  "เวลาที่ทำ": string;
   "สถานะ": string;
 };
 
@@ -147,7 +146,6 @@ export default function Approve() {
                         <td className="px-6 py-4">
                           <div className="text-gray-900">
                             <div className="font-medium">{row["วันที่ทำงาน"]}</div>
-                            <div className="text-sm text-gray-500">{row["เวลาที่ทำ"]}</div>
                           </div>
                         </td>
                         <td className="px-6 py-4">
@@ -217,7 +215,6 @@ export default function Approve() {
                         </div>
                         <div>
                           <span className="text-sm font-medium text-gray-500">เวลา:</span>
-                          <p className="text-gray-900">{row["เวลาที่ทำ"]}</p>
                         </div>
                       </div>
                     </div>
