@@ -27,6 +27,20 @@ export default function Home() {
     setIsSubmitting(true);
 
     try {
+      interface WorkRow {
+        id?: number;
+        "ผู้ทำงาน"?: string;
+        "รายละเอียดงาน"?: string;
+        "วันที่ทำงาน"?: string;
+        "สถานะ"?: string;
+      }
+      const resGet = await fetch('https://api.sheety.co/3c7c3623a853df11ca16bca8577a9f03/workflow/work');
+      const json = await resGet.json();
+      const allRows: WorkRow[] = json.work || [];
+      const maxId = allRows.length > 0
+        ? Math.max(...allRows.map((row: WorkRow) => row.id || 0))
+        : 0;
+      const nextId = maxId + 1;
       const res = await fetch('https://api.sheety.co/3c7c3623a853df11ca16bca8577a9f03/workflow/work', {
         method: 'POST',
         headers: {
@@ -34,6 +48,7 @@ export default function Home() {
         },
         body: JSON.stringify({
           work: {
+            id: nextId,
             "ผู้ทำงาน": form.name_2
               ? `${form.name_1}, ${form.name_2}`
               : form.name_1,
@@ -94,7 +109,7 @@ export default function Home() {
                 <option value="">-- เลือกชื่อ --</option>
                 <option value="503688 : นายอดิเทพ วงศ์ทิม">503688 : นายอดิเทพ วงศ์ทิม</option>
                 <option value="504235 : นายสุทัศน์ สุขเกิด">504235 : นายสุทัศน์ สุขเกิด</option>
-                <option value="504234 : นายสิทธิชัย จารุนิรันดรง">504234 : นายสิทธิชัย จารุนิรันดรง</option>
+                <option value="504234 : นายสิทธิชัย นายสิทธิชัย จารุนิรันด์">504234 : นายสิทธิชัย จารุนิรันด์</option>
                 <option value="503693 : นายนพพร ศรีมณีวงษ์">503693 : นายนพพร ศรีมณีวงษ์</option>
                 <option value="503686 : นายนฤพนธิ์ จรูญรัตน์">503686 : นายนฤพนธิ์ จรูญรัตน์</option>
                 <option value="512785 : นายสุธิรัก อาสน์สถิตย์">512785 : นายสุธิรัก อาสน์สถิตย์</option>
@@ -116,7 +131,7 @@ export default function Home() {
                 <option value="">-- เลือกชื่อ --</option>
                 <option value="503688 : นายอดิเทพ วงศ์ทิม">503688 : นายอดิเทพ วงศ์ทิม</option>
                 <option value="504235 : นายสุทัศน์ สุขเกิด">504235 : นายสุทัศน์ สุขเกิด</option>
-                <option value="504234 : นายสิทธิชัย จารุนิรันดรง">504234 : นายสิทธิชัย จารุนิรันดรง</option>
+                <option value="504234 : นายสิทธิชัย จารุนิรันด์">504234 : นายสิทธิชัย จารุนิรันด์</option>
                 <option value="503693 : นายนพพร ศรีมณีวงษ์">503693 : นายนพพร ศรีมณีวงษ์</option>
                 <option value="503686 : นายนฤพนธิ์ จรูญรัตน์">503686 : นายนฤพนธิ์ จรูญรัตน์</option>
                 <option value="512785 : นายสุธิรัก อาสน์สถิตย์">512785 : นายสุธิรัก อาสน์สถิตย์</option>
