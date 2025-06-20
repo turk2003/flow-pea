@@ -19,58 +19,35 @@ export default function Home() {
       des: '',
       day: '',
       status: '',
+
     });
   };
 
   const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     setIsSubmitting(true);
-
+  
     try {
-      interface WorkRow {
-        id?: number;
-        "ผู้ทำงาน"?: string;
-        "รายละเอียดงาน"?: string;
-        "วันที่ทำงาน"?: string;
-        "สถานะ"?: string;
-      }
-      const resGet = await fetch('https://api.sheety.co/3c7c3623a853df11ca16bca8577a9f03/workflow/work');
-      const json = await resGet.json();
-      const allRows: WorkRow[] = json.work || [];
-      const maxId = allRows.length > 0
-        ? Math.max(...allRows.map((row: WorkRow) => row.id || 0))
-        : 0;
-      const nextId = maxId + 1;
-      const res = await fetch('https://api.sheety.co/3c7c3623a853df11ca16bca8577a9f03/workflow/work', {
+      await fetch('https://script.google.com/macros/s/AKfycbxo-Lv3YGG2i5wqDz-E38Tt99ft2sidpLNOeoTMsz7M2trmbJhzhrvx_x8O_AaSQ3yk/exec', {
         method: 'POST',
+        mode: 'no-cors',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          work: {
-            id: nextId,
-            "ผู้ทำงาน": form.name_2
-              ? `${form.name_1}, ${form.name_2}`
-              : form.name_1,
-            "รายละเอียดงาน": form.des,
-            "วันที่ทำงาน": form.day,
-            "สถานะ": "รออนุมัติ",
-          },
+          name_1: form.name_1 ,
+          name_2: form.name_2,
+          des: form.des,
+          day: form.day,
         }),
       });
-
-      if (res.ok) {
-        alert('ส่งข้อมูลเรียบร้อยแล้ว!');
-        resetForm(); // รีเซ็ตฟอร์มหลังส่งสำเร็จ
-      } else {
-        const error = await res.text();
-        alert('เกิดข้อผิดพลาด: ' + error);
-      }
-    } catch (err) {
-      alert('เกิดข้อผิดพลาด: ' + err);
-    } finally {
-      setIsSubmitting(false);
-    }
+  
+      alert('ส่งข้อมูลเรียบร้อยแล้ว!');
+    resetForm();
+    setIsSubmitting(false);
+  } catch (err) {
+    alert('เกิดข้อผิดพลาด: ' + err);
+  }
   };
 
   return (

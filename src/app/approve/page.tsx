@@ -17,11 +17,10 @@ export default function Approve() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await fetch('https://api.sheety.co/3c7c3623a853df11ca16bca8577a9f03/workflow/work');
+      const res = await fetch('https://script.google.com/macros/s/AKfycbxo-Lv3YGG2i5wqDz-E38Tt99ft2sidpLNOeoTMsz7M2trmbJhzhrvx_x8O_AaSQ3yk/exec');
       const json = await res.json();
-      
-      // กรองข้อมูลเฉพาะที่มีสถานะ "รออนุมัติ"
-      const pendingData = json.work.filter((item: Row) => item["สถานะ"] === 'รออนุมัติ');
+      // สมมุติ Apps Script ส่ง { data: [...] }
+      const pendingData = (json.data || []).filter((item: Row) => item["สถานะ"] === 'รออนุมัติ');
       setData(pendingData);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -29,29 +28,23 @@ export default function Approve() {
     }
     setLoading(false);
   };
-
   const handleApprove = async (id: number) => {
     setApproving(id);
     try {
-      const res = await fetch(`https://api.sheety.co/3c7c3623a853df11ca16bca8577a9f03/workflow/work/${id}`, {
-        method: 'PUT',
+      await fetch('https://script.google.com/macros/s/AKfycbxo-Lv3YGG2i5wqDz-E38Tt99ft2sidpLNOeoTMsz7M2trmbJhzhrvx_x8O_AaSQ3yk/exec', {
+        method: 'POST',
+        mode: 'no-cors',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          work: {
-            "สถานะ": 'อนุมัติ',
-          },
+          action: 'approve',
+          id,
         }),
       });
 
-      if (res.ok) {
-        // ลบรายการที่อนุมัติแล้วออกจาก state โดยไม่ต้องโหลดใหม่
-        setData(prevData => prevData.filter(item => item.id !== id));
-        alert('อนุมัติเรียบร้อยแล้ว!');
-      } else {
-        alert('เกิดข้อผิดพลาดในการอนุมัติ');
-      }
+      setData(prevData => prevData.filter(item => item.id !== id));
+      alert('อนุมัติเรียบร้อยแล้ว!');
     } catch (error) {
       console.error('Error approving:', error);
       alert('เกิดข้อผิดพลาดในการอนุมัติ');
