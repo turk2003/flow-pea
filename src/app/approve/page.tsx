@@ -13,6 +13,7 @@ export default function Approve() {
   const [data, setData] = useState<Row[]>([]);
   const [loading, setLoading] = useState(false);
   const [approving, setApproving] = useState<number | null>(null);
+  const [approvingAll, setApprovingAll] = useState(false);
 
   const fetchData = async () => {
     setLoading(true);
@@ -51,6 +52,32 @@ export default function Approve() {
     }
     setApproving(null);
   };
+  const handleApproveAll = async () => {
+    if (data.length === 0) return;
+    setApprovingAll(true);
+    try {
+      // อนุมัติทีละรายการแบบ async/await เพื่อให้แน่ใจว่าแต่ละอันสำเร็จ
+      for (const row of data) {
+        await fetch('https://script.google.com/macros/s/AKfycbxo-Lv3YGG2i5wqDz-E38Tt99ft2sidpLNOeoTMsz7M2trmbJhzhrvx_x8O_AaSQ3yk/exec', {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            action: 'approve',
+            id: row.id,
+          }),
+        });
+      }
+      setData([]);
+      alert('อนุมัติทุกรายการเรียบร้อยแล้ว!');
+    } catch (error) {
+      console.error('Error approving all:', error);
+      alert('เกิดข้อผิดพลาดในการอนุมัติทั้งหมด');
+    }
+    setApprovingAll(false);
+  };
 
   useEffect(() => {
     fetchData();
@@ -73,16 +100,35 @@ export default function Approve() {
                 <p className="text-gray-500">จัดการคำขออนุมัติงาน</p>
               </div>
             </div>
-            <button
-              onClick={fetchData}
-              disabled={loading}
-              className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
-            >
-              <svg className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-              </svg>
-              <span>รีเฟรช</span>
-            </button>
+            <div className="flex items-center">
+              <button
+                onClick={fetchData}
+                disabled={loading}
+                className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+              >
+                <svg className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                <span>รีเฟรช</span>
+              </button>
+              <button
+                onClick={handleApproveAll}
+                disabled={loading || approvingAll || data.length === 0}
+                className="flex items-center space-x-2 px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors disabled:opacity-50 ml-2"
+              >
+                {approvingAll ? (
+                  <svg className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                ) : (
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                )}
+                <span>อนุมัติทั้งหมด</span>
+              </button>
+            </div>
           </div>
         </div>
 
