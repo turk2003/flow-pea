@@ -18,7 +18,7 @@ export default function Approve() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await fetch('https://script.google.com/macros/s/AKfycbxo-Lv3YGG2i5wqDz-E38Tt99ft2sidpLNOeoTMsz7M2trmbJhzhrvx_x8O_AaSQ3yk/exec');
+      const res = await fetch('https://script.google.com/macros/s/AKfycbz1KwyajW0dHEFZ3x5kC9UW6jsOw7slqi7mMvoZQla55f0zYt078WmmF5JambM16RWB/exec');
       const json = await res.json();
       // สมมุติ Apps Script ส่ง { data: [...] }
       const pendingData = (json.data || []).filter((item: Row) => item["สถานะ"] === 'รออนุมัติ');
@@ -32,7 +32,7 @@ export default function Approve() {
   const handleApprove = async (id: number) => {
     setApproving(id);
     try {
-      await fetch('https://script.google.com/macros/s/AKfycbxo-Lv3YGG2i5wqDz-E38Tt99ft2sidpLNOeoTMsz7M2trmbJhzhrvx_x8O_AaSQ3yk/exec', {
+      await fetch('https://script.google.com/macros/s/AKfycbz1KwyajW0dHEFZ3x5kC9UW6jsOw7slqi7mMvoZQla55f0zYt078WmmF5JambM16RWB/exec', {
         method: 'POST',
         mode: 'no-cors',
         headers: {
@@ -56,20 +56,20 @@ export default function Approve() {
     if (data.length === 0) return;
     setApprovingAll(true);
     try {
-      // อนุมัติทีละรายการแบบ async/await เพื่อให้แน่ใจว่าแต่ละอันสำเร็จ
-      for (const row of data) {
-        await fetch('https://script.google.com/macros/s/AKfycbxo-Lv3YGG2i5wqDz-E38Tt99ft2sidpLNOeoTMsz7M2trmbJhzhrvx_x8O_AaSQ3yk/exec', {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            action: 'approve',
-            id: row.id,
-          }),
-        });
-      }
+      await fetch('https://script.google.com/macros/s/AKfycbz1KwyajW0dHEFZ3x5kC9UW6jsOw7slqi7mMvoZQla55f0zYt078WmmF5JambM16RWB/exec', {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'approveAll',
+          ids: data.map(row => row.id),
+          
+        }),
+      });
+      console.log(data.map(row => row.id),)
+      
       setData([]);
       alert('อนุมัติทุกรายการเรียบร้อยแล้ว!');
     } catch (error) {
